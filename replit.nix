@@ -1,5 +1,6 @@
 { pkgs }: {
   deps = [
+    pkgs.sqlite.bin
     pkgs.wget
     pkgs.sudo
     pkgs.nodejs-16_x

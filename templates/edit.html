@@ -1,0 +1,84 @@
+{% extends 'base.html'%}
+
+
+{%block title%}
+Edit Recipe
+{% endblock %}
+
+{% block content %}
+{% if error %}
+      <p><strong>Error</strong>:{{error}}</p>
+    {% endif %}
+    
+<div style="width: 70%; margin-right:auto; margin-left:auto;">
+        <h1 style="margin-top: 25px; text-align: center; font-family: monospace; margin-bottom: 2.5rem;">Update Recipe</h1>
+  
+  <div style="font-size:20px; background-color: ghostwhite;">
+        <form form="main-form" id="main-form" method="post" action="#">
+    
+
+        {{ form.hidden_tag() }}
+        {{form.my_hidden_field(form = "main-form", id ="hidden-field", value="" )}}
+        <label for="recipe_name">Recipe Name:</label>
+          <div class="w-100"></div>
+        {{ form.name(form="main-form",style = "width: 90%;") }}
+         
+        <br><br>
+
+        <label for="instructions">Instructions:</label>
+          <div class="w-100"></div>
+        {{ form.instructions(form="main-form", style="width: 90%; height: 10rem;")}}
+          
+        <br><br>
+        <label for="time_taken">How much time does it take:</label>
+          <div class="w-100"></div>
+        {{ form.time_taken(form="main-form")}}  
+        <br><br>
+        
+        <br><br>
+        <input type="submit" form="main-form" class="btn btn-dark btn-lg">
+    </form>
+        </div>
+    </div>
+
+    <script>
+        const form1 = document.getElementById("mini-form");
+        const form2 = document.getElementById("mini-form1");
+        const form3 = document.getElementById("main-form")
+        const ingredientList = document.getElementById("ingredientList")
+        const hiddenInput = document.getElementById("hidden-field")
+      
+        form1.addEventListener('submit',handleSubmit); 
+        form2.addEventListener('submit',handleSubmit);
+        form3.addEventListener('submit',stopReload);
+
+        function stopReload(event) {
+          event.preventDefault();
+          form3.submit();
+        }
+        function handleSubmit(event) {
+          event.preventDefault();//prevent form submission
+          const formid = event.target.id;
+          const ingredient =
+            event.target.elements["new_ingredients"].value ||
+            event.target.elements["ingredients"].value;
+          const li = document.createElement('li');// creates li tag
+          li.textContent = ingredient;// Set li text content to ingredient value
+          ingredientList.appendChild(li);// Add li to ul
+          
+          // Update hidden input value with all current ingredients
+          const currentIngredients = Array.from(ingredientList.querySelectorAll('li')).map(li => li.textContent).join(',');
+          
+          hiddenInput.value = currentIngredients;
+          
+          event.target.reset();
+            console.log("Ingredient value:", ingredient);
+            console.log("Current ingredients:", currentIngredients);
+            console.log("Hidden input value:", hiddenInput.value);
+            console.log("Form fields reset.");// Reset form fields
+          
+        }
+      
+
+    </script>
+{%endblock%}
