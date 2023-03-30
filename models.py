@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer, Column, ForeignKey, String, Text
+from sqlalchemy import Integer, Column, ForeignKey, String, Text,LargeBinary
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 # from sqlalchemy.ext.declarative import declarative_base
@@ -32,7 +32,7 @@ class Ingredient(db.Model):
 class Recipe(db.Model):
     __tablename__ = 'recipes'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True,unique=True)
     name = Column(String, nullable=False)
     time_taken = Column(Integer)
     images = relationship('Image', backref='recipe', lazy=True)
@@ -45,11 +45,12 @@ class Recipe(db.Model):
     user_id = Column(Integer, ForeignKey('users.id'))
     uploaded_by = relationship('User', back_populates='uploaded_recipes')
     instructions = Column(Text)
+    
 
 class Image(db.Model):
   __tablename__ = "image"
   id = Column(Integer, primary_key=True)
-  url = Column(String(255), nullable=False)
+  url = Column(String)
   recipe_id = Column(Integer, ForeignKey('recipes.id'), nullable=False)
 
 class User(db.Model, UserMixin):

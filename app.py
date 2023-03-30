@@ -1,18 +1,22 @@
-from flask import Flask, render_template, flash, request, abort, g, redirect, url_for, jsonify
+from flask import Flask, render_template, flash, request, abort, g, redirect, url_for, jsonify,send_from_directory
 from queries import Queries
 from models import db, User, Recipe, Image
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from forms import LoginForm, SignupForm, NewRecipeForm, ImageForm
+from flask_uploads import UploadSet,IMAGES, configure_uploads
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 from sqlalchemy.exc import IntegrityError
 import os
 from sqlalchemy import or_
 
+path = os.getcwd()
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///recipes.db'
 app.config["SECRET_KEY"] = "samuelandmercyproject"
-app.config['UPLOAD_FOLDER'] = 'static/images'
+app.config['UPLOADED_PHOTOS_DEST'] = f'{path}/static/images'
+photos = UploadSet('photos', IMAGES)
+configure_uploads(app,photos)
 
 db.init_app(app)
 queries = Queries(db)
@@ -101,7 +105,9 @@ def show_recipe(recipe_id):
     abort(404, "No product with that id")
   return render_template("recipe.html", recipe=recipe, recipe_list=recipe_list)
 
-
+@app.route('/uploads/<filename>')
+def get_file(filename):
+  return send_from_directory(app.config['UPLOADED_PHOTOS_DEST'],filename)
 @app.route("/upload_recipes", methods=['GET', 'POST'])
 @login_required
 def upload_recipes():
@@ -128,6 +134,17 @@ def upload_recipes():
     except IntegrityError:
         db.session.rollback()
         error ="Recipe name must be unique. Please choose a different name.','error'"
+
+        if image_form.validate_on_submit():
+
+          filename = photos.save(image_form.image.data)
+          file_url = url_for('get_file',filename= filename)
+          print(file_url)
+          recipe = Recipe.query.order_by(Recipe.id.desc()).first()
+          recipe_id = recipe.id
+          image = Image(url=file_url,recipe_id = recipe_id )
+          db.session.add(image)
+          db.session.commit()
   
     flash('Your recipe has been uploaded successfully!', 'success')
     return redirect(url_for('dashboard'))
