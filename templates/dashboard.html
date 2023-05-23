@@ -24,6 +24,11 @@
                 <p>
                   <a href="{{url_for('upload_recipes')}}" class="btn btn-dark my-2">Upload Recipes</a>
                 </p>
+                {%for recipe in recipes%}
+                <a href="/recipe/{{recipe.id}}"><li>{{recipe.name}}</li></a>
+                <a href="/recipe/{{recipe.id}}"><img src="{{ recipe.images.url }}"></a>
+            
+                {% endfor %}
               </div>
             </div>
           </section>

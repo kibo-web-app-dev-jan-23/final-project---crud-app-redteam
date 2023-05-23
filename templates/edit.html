@@ -33,9 +33,13 @@ Edit Recipe
         <label for="time_taken">How much time does it take:</label>
           <div class="w-100"></div>
         {{ form.time_taken(form="main-form")}}  
-        <br><br>
+        <br><br><br>
         
-        <br><br>
+        {{image_form.image(form = "main-form")}}
+      
+        <br><br><br>
+        
+        
         <input type="submit" form="main-form" class="btn btn-dark btn-lg">
     </form>
         </div>

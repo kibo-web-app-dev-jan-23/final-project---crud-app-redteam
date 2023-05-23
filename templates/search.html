@@ -16,8 +16,11 @@ Search
 {% block content %}
 
 <ul>
-{% for recipe in recipes %} 
-  <a href="/recipe/{{recipe.id}}"><li>{{recipe.name}}</li></a>
+{% for recipe in recipes %}
+
+    <a href="/recipe/{{recipe.id}}"><li>{{recipe.name}}</li></a>
+    <a href="/recipe/{{recipe.id}}"><img src="{{ recipe.images[0].url }}"></a>
+
 {% endfor %}
 </ul>
 

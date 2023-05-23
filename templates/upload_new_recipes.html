@@ -1,7 +1,5 @@
 {% extends 'base.html'%}
 
-
-
 {% block search %}
 {% if error %}
       <p><strong>Error</strong>:{{error}}</p>
@@ -26,12 +24,23 @@ Upload New Recipes
     <h1 style="margin-top: 25px; text-align: center; font-family: monospace; margin-bottom: 2.5rem;">Create a Recipe</h1>
       
   <div style="font-size:20px; background-color: ghostwhite;">
-    <form form="main-form" id="main-form" method="post" action="{{ url_for('upload_recipes') }}">
+    <form form="main-form" id="main-form" enctype= 'multipart/form-data' method="post" action="{{ url_for('upload_recipes') }}">
         {{ form.hidden_tag() }}
         {{form.my_hidden_field(form = "main-form", id ="hidden-field", value="" )}}
         <label for="recipe_name">Recipe Name:</label>
         <div class="w-100"></div>
         {{ form.name(form="main-form", style="width: 90%;") }}
+
+        <br><br>
+        <label for="ingredients">Ingredients:</label>
+        <div class="w-100"></div>
+        {{ form.ingredients(form="main-form", style = "width: 90%;height: 10rem;") }}
+      
+<!--         <div class="w-100"></div> -->
+        <small id="InstructionsHelpBlock" class="form-text text-muted col-12" style="font-size: 12px; display: block;">
+  Each ingredrient should be seperated with a comma(,)
+</small>
+        <br>
         
         <br><br>
         <label for="instructions">Instructions:</label>
@@ -43,13 +52,14 @@ Upload New Recipes
   Each step should be seperated with a period(.)
 </small>
         <br>
+        
         <label for="time_taken">How much time does it take:</label>
         <div class="w-100"></div>
     
         {{ form.time_taken(form="main-form")}}  
         <br><br><br>
         
-        
+          {{image_form.image(form = "main-form")}}
         
         <br><br><br>
       

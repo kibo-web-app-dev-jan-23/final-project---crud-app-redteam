@@ -1,10 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-<<<<<<< HEAD
-from sqlalchemy import Integer, Column, ForeignKey, String, Text,LargeBinary
-=======
 from sqlalchemy import Integer, Column, ForeignKey, String, Text
->>>>>>> parent of 29747886 (weird errors fixed)
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 # from sqlalchemy.ext.declarative import declarative_base
@@ -27,7 +23,7 @@ class Ingredient(db.Model):
   __tablename__ = 'ingredients'
 
   id = Column(Integer, primary_key=True)
-  name = Column(String, nullable=False)
+  name = Column(String, nullable=False,unique=True)
   recipes = relationship('Recipe',
                          secondary=recipe_ingredient_table,
                          back_populates='ingredients')
@@ -36,12 +32,8 @@ class Ingredient(db.Model):
 class Recipe(db.Model):
     __tablename__ = 'recipes'
 
-<<<<<<< HEAD
-    id = Column(Integer, primary_key=True,unique=True)
-=======
     id = Column(Integer, primary_key=True)
->>>>>>> parent of 29747886 (weird errors fixed)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, unique = True)
     time_taken = Column(Integer)
     images = relationship('Image', backref='recipe', lazy=True)
     ingredients = relationship('Ingredient',
@@ -53,19 +45,11 @@ class Recipe(db.Model):
     user_id = Column(Integer, ForeignKey('users.id'))
     uploaded_by = relationship('User', back_populates='uploaded_recipes')
     instructions = Column(Text)
-<<<<<<< HEAD
-    
-=======
->>>>>>> parent of 29747886 (weird errors fixed)
 
 class Image(db.Model):
   __tablename__ = "image"
   id = Column(Integer, primary_key=True)
-<<<<<<< HEAD
-  url = Column(String)
-=======
   url = Column(String(255), nullable=False)
->>>>>>> parent of 29747886 (weird errors fixed)
   recipe_id = Column(Integer, ForeignKey('recipes.id'), nullable=False)
 
 class User(db.Model, UserMixin):
