@@ -1,15 +1,23 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, flash, request, abort, g, redirect, url_for, jsonify,send_from_directory
+=======
+from flask import Flask, render_template, flash, request, abort, g, redirect, url_for, jsonify
+>>>>>>> parent of 29747886 (weird errors fixed)
 from queries import Queries
 from models import db, User, Recipe, Image
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from forms import LoginForm, SignupForm, NewRecipeForm, ImageForm
+<<<<<<< HEAD
 from flask_uploads import UploadSet,IMAGES, configure_uploads
+=======
+>>>>>>> parent of 29747886 (weird errors fixed)
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 from sqlalchemy.exc import IntegrityError
 import os
 from sqlalchemy import or_
 
+<<<<<<< HEAD
 path = os.getcwd()
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///recipes.db'
@@ -17,6 +25,12 @@ app.config["SECRET_KEY"] = "samuelandmercyproject"
 app.config['UPLOADED_PHOTOS_DEST'] = f'{path}/static/images'
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app,photos)
+=======
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///recipes.db'
+app.config["SECRET_KEY"] = "samuelandmercyproject"
+app.config['UPLOAD_FOLDER'] = 'static/images'
+>>>>>>> parent of 29747886 (weird errors fixed)
 
 db.init_app(app)
 queries = Queries(db)
@@ -105,9 +119,13 @@ def show_recipe(recipe_id):
     abort(404, "No product with that id")
   return render_template("recipe.html", recipe=recipe, recipe_list=recipe_list)
 
+<<<<<<< HEAD
 @app.route('/uploads/<filename>')
 def get_file(filename):
   return send_from_directory(app.config['UPLOADED_PHOTOS_DEST'],filename)
+=======
+
+>>>>>>> parent of 29747886 (weird errors fixed)
 @app.route("/upload_recipes", methods=['GET', 'POST'])
 @login_required
 def upload_recipes():
@@ -134,6 +152,7 @@ def upload_recipes():
     except IntegrityError:
         db.session.rollback()
         error ="Recipe name must be unique. Please choose a different name.','error'"
+<<<<<<< HEAD
 
         if image_form.validate_on_submit():
 
@@ -145,6 +164,8 @@ def upload_recipes():
           image = Image(url=file_url,recipe_id = recipe_id )
           db.session.add(image)
           db.session.commit()
+=======
+>>>>>>> parent of 29747886 (weird errors fixed)
   
     flash('Your recipe has been uploaded successfully!', 'success')
     return redirect(url_for('dashboard'))

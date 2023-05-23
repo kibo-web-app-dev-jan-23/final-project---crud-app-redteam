@@ -1,0 +1,24 @@
+{% extends 'base.html'%}
+
+{% block search %}
+
+  <form class="d-flex" action = "{{url_for('search')}}" >
+              <input class="form-control me-2" type="text" placeholder="Search" name = "q">
+              <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+
+{% endblock %}
+
+{%block title%}
+Search
+{% endblock %}
+
+{% block content %}
+
+<ul>
+{% for recipe in recipes %} 
+  <a href="/recipe/{{recipe.id}}"><li>{{recipe.name}}</li></a>
+{% endfor %}
+</ul>
+
+{% endblock %}

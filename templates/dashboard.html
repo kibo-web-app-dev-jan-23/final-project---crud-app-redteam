@@ -1,0 +1,37 @@
+{% extends 'base.html'%}
+
+{% block search %}
+
+    <form class="d-flex" action = "{{url_for('search')}}">
+              <input class="form-control me-2" type="text" placeholder="Search" name ='q'>
+              <button class="btn btn-dark" type="submit">Search</button>
+            </form>
+
+
+{% endblock %}
+
+{%block title%}
+{{g.user.name}}
+{% endblock %}
+
+{% block content %}
+   
+          <section class="py-5 text-center container">
+            <div class="row py-lg-5">
+              <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Build your recipes</h1>
+                <p class="lead text-muted">This is your recipe world. Here, you get to browse amazing recipes, create your recipes and show the world. Live life one recipe at a time.</p>
+                <p>
+                  <a href="{{url_for('upload_recipes')}}" class="btn btn-dark my-2">Upload Recipes</a>
+                </p>
+              </div>
+            </div>
+          </section>
+    </ul>
+        
+
+      
+
+
+{% endblock %}
+
