@@ -45,9 +45,6 @@ def before_request():
   g.user = current_user
 
 def log_report(report):
-  # f= open("report.txt",'a',encoding = 'utf-8')
-  # f.write(f'{report}\n')
-  # f.close
   with open("report.txt", 'a', encoding='utf-8') as f:
         f.write(f'{report}\n')
 
@@ -93,30 +90,12 @@ def login():
 
     return render_template("login.html", form=form, error=error)
 
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#   error = None
-#   form = LoginForm()
-#   if form.validate_on_submit():
-#     user = User.query.filter_by(email=form.email.data).first()
-#     if user:
-#       if queries.validate_password(form.email.data, form.password.data):
-#         login_user(user)
-#         return redirect(url_for('dashboard'))
-#       else:
-#         error = "invalid password / user"
-#     else:
-#       error = "invalid password / user"
-#   return render_template("login.html", form=form, error=error)
-
-
 @app.route("/dashboard", methods=['GET', 'POST'])
 @login_required
 def dashboard():
   if not g.user:
     return redirect(url_for('login'))
   last_12_entries = Recipe.query.order_by(Recipe.id.desc()).limit(12).all()
-  log_report(last_12_entries)
   return render_template("dashboard.html",recipes = last_12_entries)
 
 
@@ -204,9 +183,6 @@ def upload_recipes():
             upload_recipe_image(recipe.id, image_form.image.data)
             flash('Your recipe has been uploaded successfully!', 'success')
             return redirect(url_for('dashboard'))
-        else:
-            report = "Validation failed"
-            log_report(report)
 
     return render_template('upload_new_recipes.html', form=form, image_form=image_form, error=error)
 
@@ -257,15 +233,11 @@ def update_recipe(recipe_id):
   recipe = get_recipe(recipe_id)
   if not recipe:
       abort(404)
-  # if recipe.uploaded_by != current_user:
-  #     abort(403)
+
 
   form = NewRecipeForm(obj=recipe)
   image_form = ImageForm()
-  # recipe = Recipe.query.get_or_404(recipe_id)
-  # form = NewRecipeForm(request.form, obj=recipe)
-  # image = Image.query.filter_by(recipe_id=recipe.id).first()
-  # image_form = ImageForm(request.form, obj=image)
+
 
   if request.method == 'POST' and form.validate():
     form.populate_obj(recipe)  # update the recipe object with the form data
@@ -290,64 +262,6 @@ def update_recipe(recipe_id):
     return redirect(url_for('show_recipe', recipe_id=recipe.id))
 
   return render_template('edit.html',form=form,image_form=image_form,recipe=recipe,is_update=True)
-
-# @app.route('/recipe/edit/<int:recipe_id>', methods=['GET', 'POST'])
-# @login_required
-# def update_recipe(recipe_id):
-#   recipe = Recipe.query.get_or_404(recipe_id)
-#   form = NewRecipeForm(request.form, obj=recipe)
-#   image = Image.query.filter_by(recipe_id=recipe.id).first()
-#   image_form = ImageForm(request.form,obj=image)
-
-#   # fetch the existing image object associated with the recipe
-#   # image = Image.query.filter_by(recipe_id=recipe.id).first()
-
-#   if request.method == 'POST' and form.validate():
-#     form.populate_obj(recipe)  # update the recipe object with the form data
-
-#     # handle image upload
-#     if image_form.validate_on_submit() and image_form.image.data:
-#       # create FileStorage object from uploaded file
-#       filestorage = FileStorage(stream=image_form.image.data.stream,
-#                                 filename=image_form.image.data.filename)
-
-#       # save image to disk
-#       filename = secure_filename(filestorage.filename)
-#       filestorage.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-#       if image:
-#         # if an image object already exists, update the url property
-#         image.url = filename
-#       else:
-#         # if an image object does not exist, create a new object
-#         image = Image(url=filename, recipe_id=recipe.id)
-#         db.session.add(image)
-
-#       flash('Image uploaded successfully.', 'success')
-
-#     else:
-#       flash('No image selected.', 'danger')
-
-#     try:
-#       db.session.commit()  # commit changes to the database
-#       flash('Your recipe has been updated successfully!', 'success')
-#       return redirect(url_for('show_recipe', recipe_id=recipe.id))
-#     except IntegrityError:
-#       db.session.rollback()
-#       error = "'Recipe name must be unique. Please choose a different name.error'"
-#       return render_template('edit.html',
-#                          form=form,
-#                          image_form=image_form,
-#                          recipe=recipe,
-#                          is_update=True,error = error)
-
-#     # return redirect(url_for('my_recipes'))
-#   return render_template('edit.html',
-#                          form=form,
-#                          image_form=image_form,
-#                          recipe=recipe,
-#                          is_update=True)
-
 
 @app.route('/recipe/delete/<int:recipe_id>', methods=['GET', 'POST', 'DELETE'])
 @login_required
@@ -376,9 +290,7 @@ def search():
             .filter(or_(Recipe.name.like(f'%{search_term}%'),
                         User.name.like(f'%{search_term}%')))\
             .options(selectinload(Recipe.images)).all()
-  for recipe in recipes:
-    log_report(recipe.images)
-  # recipes = recipes.selectinload
+
   return render_template('search.html', recipes=recipes)
 
 
